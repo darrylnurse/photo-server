@@ -11,9 +11,10 @@ import pog
 pub type SinglePhotoRow {
   SinglePhotoRow(
     id: Int,
-    added: Option(String),
-    url: Option(String),
-    title: Option(String),
+    added_date: String,
+    url: String,
+    slug: String,
+    title: String,
     date: Option(String),
     location: Option(String),
     camera: Option(String),
@@ -33,21 +34,23 @@ pub type SinglePhotoRow {
 pub fn single_photo(db, arg_1) {
   let decoder = {
     use id <- decode.field(0, decode.int)
-    use added <- decode.field(1, decode.optional(decode.string))
-    use url <- decode.field(2, decode.optional(decode.string))
-    use title <- decode.field(3, decode.optional(decode.string))
-    use date <- decode.field(4, decode.optional(decode.string))
-    use location <- decode.field(5, decode.optional(decode.string))
-    use camera <- decode.field(6, decode.optional(decode.string))
-    use focal_length <- decode.field(7, decode.optional(decode.string))
-    use aperture <- decode.field(8, decode.optional(decode.string))
-    use shutter_speed <- decode.field(9, decode.optional(decode.string))
-    use iso <- decode.field(10, decode.optional(decode.int))
+    use added_date <- decode.field(1, decode.string)
+    use url <- decode.field(2, decode.string)
+    use slug <- decode.field(3, decode.string)
+    use title <- decode.field(4, decode.string)
+    use date <- decode.field(5, decode.optional(decode.string))
+    use location <- decode.field(6, decode.optional(decode.string))
+    use camera <- decode.field(7, decode.optional(decode.string))
+    use focal_length <- decode.field(8, decode.optional(decode.string))
+    use aperture <- decode.field(9, decode.optional(decode.string))
+    use shutter_speed <- decode.field(10, decode.optional(decode.string))
+    use iso <- decode.field(11, decode.optional(decode.int))
     decode.success(
       SinglePhotoRow(
         id:,
-        added:,
+        added_date:,
         url:,
+        slug:,
         title:,
         date:,
         location:,
@@ -65,10 +68,10 @@ pub fn single_photo(db, arg_1) {
 FROM
     photos
 WHERE
-    id = $1"
+    slug = $1"
 
   pog.query(query)
-  |> pog.parameter(pog.int(arg_1))
+  |> pog.parameter(pog.text(arg_1))
   |> pog.returning(decoder)
   |> pog.execute(db)
 }
@@ -92,15 +95,16 @@ pub fn new_photo(
   arg_9,
   arg_10,
   arg_11,
+  arg_12,
 ) {
   let decoder =
   decode.map(decode.dynamic, fn(_) { Nil })
 
   let query =
   "INSERT INTO
-    photos (id, added, url, title, date, location, camera, focal_length, aperture, shutter_speed, iso)
+    photos (id, added_date, url, slug, title, date, location, camera, focal_length, aperture, shutter_speed, iso)
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);"
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);"
 
   pog.query(query)
   |> pog.parameter(pog.int(arg_1))
@@ -113,7 +117,8 @@ VALUES
   |> pog.parameter(pog.text(arg_8))
   |> pog.parameter(pog.text(arg_9))
   |> pog.parameter(pog.text(arg_10))
-  |> pog.parameter(pog.int(arg_11))
+  |> pog.parameter(pog.text(arg_11))
+  |> pog.parameter(pog.int(arg_12))
   |> pog.returning(decoder)
   |> pog.execute(db)
 }
@@ -127,9 +132,10 @@ VALUES
 pub type AllPhotosRow {
   AllPhotosRow(
     id: Int,
-    added: Option(String),
-    url: Option(String),
-    title: Option(String),
+    added_date: String,
+    url: String,
+    slug: String,
+    title: String,
     date: Option(String),
     location: Option(String),
     camera: Option(String),
@@ -149,21 +155,23 @@ pub type AllPhotosRow {
 pub fn all_photos(db) {
   let decoder = {
     use id <- decode.field(0, decode.int)
-    use added <- decode.field(1, decode.optional(decode.string))
-    use url <- decode.field(2, decode.optional(decode.string))
-    use title <- decode.field(3, decode.optional(decode.string))
-    use date <- decode.field(4, decode.optional(decode.string))
-    use location <- decode.field(5, decode.optional(decode.string))
-    use camera <- decode.field(6, decode.optional(decode.string))
-    use focal_length <- decode.field(7, decode.optional(decode.string))
-    use aperture <- decode.field(8, decode.optional(decode.string))
-    use shutter_speed <- decode.field(9, decode.optional(decode.string))
-    use iso <- decode.field(10, decode.optional(decode.int))
+    use added_date <- decode.field(1, decode.string)
+    use url <- decode.field(2, decode.string)
+    use slug <- decode.field(3, decode.string)
+    use title <- decode.field(4, decode.string)
+    use date <- decode.field(5, decode.optional(decode.string))
+    use location <- decode.field(6, decode.optional(decode.string))
+    use camera <- decode.field(7, decode.optional(decode.string))
+    use focal_length <- decode.field(8, decode.optional(decode.string))
+    use aperture <- decode.field(9, decode.optional(decode.string))
+    use shutter_speed <- decode.field(10, decode.optional(decode.string))
+    use iso <- decode.field(11, decode.optional(decode.int))
     decode.success(
       AllPhotosRow(
         id:,
-        added:,
+        added_date:,
         url:,
+        slug:,
         title:,
         date:,
         location:,

@@ -4,6 +4,7 @@
 packages = [
   { name = "argv", version = "1.0.2", build_tools = ["gleam"], requirements = [], otp_app = "argv", source = "hex", outer_checksum = "BA1FF0929525DEBA1CE67256E5ADF77A7CDDFE729E3E3F57A5BDCAA031DED09D" },
   { name = "backoff", version = "1.1.6", build_tools = ["rebar3"], requirements = [], otp_app = "backoff", source = "hex", outer_checksum = "CF0CFFF8995FB20562F822E5CC47D8CCF664C5ECDC26A684CBE85C225F9D7C39" },
+  { name = "decode", version = "1.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "decode", source = "hex", outer_checksum = "9FFAD3F60600C6777072C3836B9FD965961D7C76C5D6007918AE0F82C1B21BE3" },
   { name = "directories", version = "1.1.0", build_tools = ["gleam"], requirements = ["envoy", "gleam_stdlib", "platform", "simplifile"], otp_app = "directories", source = "hex", outer_checksum = "BDA521A4EB9EE3A7894F0DC863797878E91FF5C7826F7084B2E731E208BDB076" },
   { name = "dot_env", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "simplifile"], otp_app = "dot_env", source = "hex", outer_checksum = "F2B4815F1B5AF8F20A6EADBB393E715C4C35203EBD5BE8200F766EA83A0B18DE" },
   { name = "dotenv", version = "3.1.0", build_tools = ["mix"], requirements = [], otp_app = "dotenv", source = "hex", outer_checksum = "01BED84D21BEDD8739AEBAD16489A3CE12D19C2D59AF87377DA65EBB361980D3" },
@@ -48,8 +49,10 @@ packages = [
 ]
 
 [requirements]
+decode = { version = ">= 1.1.0 and < 2.0.0" }
 dot_env = { version = ">= 1.2.0 and < 2.0.0" }
 dotenv = { version = ">= 3.1.0 and < 4.0.0" }
+envoy = { version = ">= 1.0.2 and < 2.0.0" }
 gleam_erlang = { version = ">= 0.33.0 and < 1.0.0" }
 gleam_http = { version = ">= 3.7.2 and < 4.0.0" }
 gleam_json = { version = ">= 2.2.0 and < 3.0.0" }

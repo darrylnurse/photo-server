@@ -3,4 +3,4 @@ SELECT
 FROM
     photos
 WHERE
-    id = $1
+    slug = $1
