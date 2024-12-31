@@ -1,0 +1,19 @@
+name = "server"
+version = "1.0.0"
+target = "erlang"
+gleam = ">= 1.6.0"
+
+[dependencies]
+gleam_stdlib = ">= 0.51.0 and < 1.0.0"
+mist = ">= 4.0.3 and < 5.0.0"
+wisp = ">= 1.4.0 and < 2.0.0"
+gleam_erlang = ">= 0.33.0 and < 1.0.0"
+gleam_http = ">= 3.7.2 and < 4.0.0"
+gleam_json = ">= 2.2.0 and < 3.0.0"
+pog = ">= 3.1.0 and < 4.0.0"
+dot_env = ">= 1.2.0 and < 2.0.0"
+dotenv = ">= 3.1.0 and < 4.0.0"
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
+squirrel = ">= 2.1.0 and < 3.0.0"
