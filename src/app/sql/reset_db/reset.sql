@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS
 CREATE TABLE IF NOT EXISTS
     photos (
         id SERIAL PRIMARY KEY,
-        added_date TEXT NOT NULL,
+        date_added TEXT NOT NULL,
         url TEXT NOT NULL,
         slug TEXT UNIQUE NOT NULL,
         title TEXT NOT NULL,
-        date TEXT,
+        date_taKen TEXT,
         location TEXT,
         camera TEXT,
         focal_length TEXT,

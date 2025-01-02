@@ -1,22 +1,29 @@
 import gleam/string
 import gleam/io
 import gleam/option
-import app/web.{type Context}
 import gleam/dynamic.{type Dynamic}
 import gleam/http.{Get, Post}
 import gleam/json
 import gleam/string_tree
+// import gleam/http/request
+// import gleam/http/response
+// import gleam/httpc
+// import gleam/result
+// import gleeunit/should
 import wisp.{type Request, type Response}
 import app/sql.{all_photos, single_photo, new_photo}
+import app/web.{type Context}
 import pog
+// import birl
+// import simplifile
 
 type FirstPhotoFields {
     FirstPhotoFields (
         id: Int,
-        added_date: String,
+        date_added: String,
         url: String,
         title: String,
-        date: String,
+        date_taken: String,
         location: String,
         camera: String,
         focal_length: String
@@ -34,11 +41,11 @@ type SecondPhotoFields {
 pub type Photo {
     Photo(
         id: Int,
-        added_date: String,
+        date_added: String,
         url: String,
         slug: String,
         title: String,
-        date: String,
+        date_taken: String,
         location: String,
         camera: String,
         focal_length: String,
@@ -76,11 +83,11 @@ pub fn list_photos(ctx: Context){
                         json.array(rows, fn(row){ 
                             json.object([
                                 #("id", json.int(row.id)),
-                                #("added_date", json.string(row.added_date)),
+                                #("date_added", json.string(row.date_added)),
                                 #("url", json.string(row.url)),
                                 #("slug", json.string(row.slug)),
                                 #("title", json.string(row.title)),
-                                #("date", json.string(option.unwrap(row.date, default_string))),
+                                #("date_taken", json.string(option.unwrap(row.date_taken, default_string))),
                                 #("location", json.string(option.unwrap(row.location, default_string))),
                                 #("camera",json.string(option.unwrap(row.camera, default_string))),
                                 #("focal_length", json.string(option.unwrap(row.focal_length, default_string))),
@@ -119,11 +126,11 @@ pub fn read_photo(ctx: Context, slug: String) -> Response {
                         json.array(rows, fn(row){ 
                             json.object([
                                 #("id", json.int(row.id)),
-                                #("added_date", json.string(row.added_date)),
+                                #("date_added", json.string(row.date_added)),
                                 #("url", json.string(row.url)),
                                 #("slug", json.string(row.slug)),
                                 #("title", json.string(row.title)),
-                                #("date", json.string(option.unwrap(row.date, default_string))),
+                                #("date_taken", json.string(option.unwrap(row.date_taken, default_string))),
                                 #("location", json.string(option.unwrap(row.location, default_string))),
                                 #("camera",json.string(option.unwrap(row.camera, default_string))),
                                 #("focal_length", json.string(option.unwrap(row.focal_length, default_string))),
@@ -155,11 +162,11 @@ fn add_photos(req: Request, ctx: Context) -> Response {
             let result = new_photo(
                 ctx.db, 
                 photo.id,
-                photo.added_date,
+                photo.date_added,
                 photo.url,
                 photo.slug,
                 photo.title,
-                photo.date,
+                photo.date_taken,
                 photo.location,
                 photo.camera,
                 photo.focal_length,
@@ -183,10 +190,10 @@ fn decode_photo(json: Dynamic) -> Result(Photo, Nil) {
     let first_decoder = dynamic.decode8(
         FirstPhotoFields,
         dynamic.field("id", dynamic.int),
-        dynamic.field("added_date", dynamic.string),
+        dynamic.field("date_added", dynamic.string),
         dynamic.field("url", dynamic.string),
         dynamic.field("title", dynamic.string),
-        dynamic.field("date", dynamic.string),
+        dynamic.field("date_taken", dynamic.string),
         dynamic.field("location", dynamic.string),
         dynamic.field("camera", dynamic.string),
         dynamic.field("focal_length", dynamic.string),
@@ -204,11 +211,11 @@ fn decode_photo(json: Dynamic) -> Result(Photo, Nil) {
 
     case part1, part2 {
         
-        Ok(FirstPhotoFields(id, added_date, url, title, date, location, camera, focal_length)), 
+        Ok(FirstPhotoFields(id, date_added, url, title, date_taken, location, camera, focal_length)), 
         Ok(SecondPhotoFields(aperture, shutter_speed, iso)) 
             -> {
                 let slug = create_slug(title)
-                Ok(Photo(id, added_date, url, slug, title, date, location, camera, focal_length, aperture, shutter_speed, iso))
+                Ok(Photo(id, date_added, url, slug, title, date_taken, location, camera, focal_length, aperture, shutter_speed, iso))
             }
 
         // if the json request does not have all the required fields it will throw a 415
@@ -228,3 +235,58 @@ fn create_slug(title: String) -> String {
     |> string.lowercase
     |> string.replace(each: " ", with: "-")
 }
+
+// post image to s3 bucket and return the url to image
+// req param should be the image
+
+pub fn upload(req: Request) {
+    let body = req.body.temporary_directory
+    // let binary_path = body.temporary_directory
+    // case simplifile.read(from: binary_path) {
+    //     Ok(bits) -> io.debug(bits)
+    //     Error(_) -> "Errored out."
+    // }
+    io.debug(body)
+    
+    
+    // case req.body {
+    //     // Ok(_) -> upload_to_bucket()
+    //     _ -> wisp.unprocessable_entity()
+    // }
+
+    wisp.json_response(string_tree.from_string("{\"upload_status\": \"Okay.\"}"), 200)
+}
+
+// goal rn: get bit array from client
+// then: craft url to upload to s3
+// then: get url 
+
+// fn upload_to_bucket(image_data: List(Int)) {
+//     let assert Ok(base_req) = request.to("http://gleam-photo-bucket.s3.us-east-2.amazonaws.com")
+//     let request = request.prepend_header(base_req, "accept", "application/vnd.hmrc.1.0+json")
+
+//     let file_name = "uploads/image-" <> create_timestamp() <> ".jpg"
+
+//     request 
+//     |> request.set_method(Post)
+//     |> request.set_body()
+
+//     use resp <- result.try(httpc.send(request))
+
+//     resp.status
+//     |> should.equal(200)
+
+//     resp
+//     |> response.get_header("content-type")
+//     |> should.equal(Ok("application/json"))
+
+//     Ok(resp)
+// }
+
+// fn create_timestamp() -> String {
+//     // created timestamp is: year-month-day-hour-minute-second-millisecond
+//     let now = birl.now()
+//     birl.to_naive_date_string(now) <> "-" <> birl.to_naive_time_string(now)
+//     |> string.replace(each: ":", with: "-")
+//     |> string.replace(each: ".", with: "-")
+// }
