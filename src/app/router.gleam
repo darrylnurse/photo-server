@@ -8,7 +8,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   case wisp.path_segments(req) {
     ["photos"] -> photos.all(req, ctx)
     ["photos", slug] -> photos.one(req, ctx, slug)
-    ["upload-image"] -> photos.upload(req)
+    //["upload-photo"] -> photos.upload(req)
 
     _ -> wisp.not_found()
   }

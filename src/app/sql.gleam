@@ -95,19 +95,18 @@ pub fn new_photo(
   arg_9,
   arg_10,
   arg_11,
-  arg_12,
 ) {
   let decoder =
   decode.map(decode.dynamic, fn(_) { Nil })
 
   let query =
   "INSERT INTO
-    photos (id, date_added, url, slug, title, date_taken, location, camera, focal_length, aperture, shutter_speed, iso)
+    photos (date_added, url, slug, title, date_taken, location, camera, focal_length, aperture, shutter_speed, iso)
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);"
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);"
 
   pog.query(query)
-  |> pog.parameter(pog.int(arg_1))
+  |> pog.parameter(pog.text(arg_1))
   |> pog.parameter(pog.text(arg_2))
   |> pog.parameter(pog.text(arg_3))
   |> pog.parameter(pog.text(arg_4))
@@ -117,8 +116,7 @@ VALUES
   |> pog.parameter(pog.text(arg_8))
   |> pog.parameter(pog.text(arg_9))
   |> pog.parameter(pog.text(arg_10))
-  |> pog.parameter(pog.text(arg_11))
-  |> pog.parameter(pog.int(arg_12))
+  |> pog.parameter(pog.int(arg_11))
   |> pog.returning(decoder)
   |> pog.execute(db)
 }
