@@ -36,7 +36,7 @@ type SecondPhotoFields {
 }
 
 type UploadPhoto {
-  UploadPhoto (
+  UploadPhoto(
     date_added: String,
     url: String,
     slug: String,
@@ -304,59 +304,3 @@ fn create_slug(title: String) -> String {
   |> string.lowercase
   |> string.replace(each: " ", with: "-")
 }
-
-// post image to s3 bucket and return the url to image
-// req param should be the image
-
-// pub fn upload(req: Request) {
-//   let body = req.body.temporary_directory
-//   // let binary_path = body.temporary_directory
-//   // case simplifile.read(from: binary_path) {
-//   //     Ok(bits) -> io.debug(bits)
-//   //     Error(_) -> "Errored out."
-//   // }
-//   io.debug(body)
-
-//   // case req.body {
-//   //     // Ok(_) -> upload_to_bucket()
-//   //     _ -> wisp.unprocessable_entity()
-//   // }
-
-//   wisp.json_response(
-//     string_tree.from_string("{\"upload_status\": \"Okay.\"}"),
-//     200,
-//   )
-// }
-// goal rn: get bit array from client
-// then: craft url to upload to s3
-// then: get url 
-
-// fn upload_to_bucket(image_data: List(Int)) {
-//     let assert Ok(base_req) = request.to("http://gleam-photo-bucket.s3.us-east-2.amazonaws.com")
-//     let request = request.prepend_header(base_req, "accept", "application/vnd.hmrc.1.0+json")
-
-//     let file_name = "uploads/image-" <> create_timestamp() <> ".jpg"
-
-//     request 
-//     |> request.set_method(Post)
-//     |> request.set_body()
-
-//     use resp <- result.try(httpc.send(request))
-
-//     resp.status
-//     |> should.equal(200)
-
-//     resp
-//     |> response.get_header("content-type")
-//     |> should.equal(Ok("application/json"))
-
-//     Ok(resp)
-// }
-
-// fn create_timestamp() -> String {
-//     // created timestamp is: year-month-day-hour-minute-second-millisecond
-//     let now = birl.now()
-//     birl.to_naive_date_string(now) <> "-" <> birl.to_naive_time_string(now)
-//     |> string.replace(each: ":", with: "-")
-//     |> string.replace(each: ".", with: "-")
-// }

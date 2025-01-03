@@ -8,9 +8,6 @@ import mist
 import wisp
 import wisp/wisp_mist
 
-// import envoy
-// import gleam/io
-
 pub fn main() {
   // squirrel seems to only work with dotenv and not dot_env 😒🐿️
   // DOTENV ONLY NEEDS TO BE A DEPENDENCY, NOT ACTUALLY UTILIZED
@@ -20,11 +17,6 @@ pub fn main() {
   |> dot_env.load
 
   let assert Ok(db_url) = env.get_string("DATABASE_URL")
-
-  // let assert Ok(db_url2) = envoy.get("DATABASE_URL")
-  // let assert Ok(db_pw) = envoy.get("PGPASSWORD")
-  // io.debug(db_url2)
-  // io.debug(db_pw)
 
   let pool = db.new_pool(db_url)
 
