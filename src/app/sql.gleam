@@ -2,6 +2,35 @@ import gleam/dynamic/decode
 import gleam/option.{type Option}
 import pog
 
+/// A row you get from running the `unique_cameras` query
+/// defined in `./src/app/sql/unique_cameras.sql`.
+///
+/// > 🐿️ This type definition was generated automatically using v2.1.0 of the
+/// > [squirrel package](https://github.com/giacomocavalieri/squirrel).
+///
+pub type UniqueCamerasRow {
+  UniqueCamerasRow(camera: Option(String))
+}
+
+/// Runs the `unique_cameras` query
+/// defined in `./src/app/sql/unique_cameras.sql`.
+///
+/// > 🐿️ This function was generated automatically using v2.1.0 of
+/// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
+///
+pub fn unique_cameras(db) {
+  let decoder = {
+    use camera <- decode.field(0, decode.optional(decode.string))
+    decode.success(UniqueCamerasRow(camera:))
+  }
+
+  let query = "SELECT DISTINCT camera FROM photos;"
+
+  pog.query(query)
+  |> pog.returning(decoder)
+  |> pog.execute(db)
+}
+
 /// A row you get from running the `single_photo` query
 /// defined in `./src/app/sql/single_photo.sql`.
 ///

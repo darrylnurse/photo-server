@@ -5,19 +5,10 @@ import gleam/json
 import gleam/option
 import gleam/string
 import gleam/string_tree
-
-// import gleam/http/request
-// import gleam/http/response
-// import gleam/httpc
-// import gleam/result
-// import gleeunit/should
-import app/sql.{all_photos, new_photo, single_photo}
+import app/sql.{all_photos, new_photo, single_photo, unique_cameras}
 import app/web.{type Context}
 import pog
 import wisp.{type Request, type Response}
-
-// import birl
-// import simplifile
 
 type FirstPhotoFields {
   FirstPhotoFields(
@@ -66,6 +57,30 @@ pub type Photo {
     shutter_speed: String,
     iso: Int,
   )
+}
+
+pub fn cameras(ctx: Context) {
+  let assert Ok(pog.Returned(_rows_count, rows)) =  unique_cameras(ctx.db)
+  let default_camera = "All"
+
+  let result = {
+    Ok(
+      json.to_string_tree(
+        json.object([
+          #(
+            "cameras", json.array(rows, fn(row) {
+              json.object([#("camera", json.string(option.unwrap(row.camera, default_camera)))])
+            })
+          )
+        ])
+      )
+    )
+  }
+
+  case result {
+    Ok(json) -> wisp.json_response(json, 200)
+    Error(Nil) -> wisp.internal_server_error()
+  }
 }
 
 pub fn all(req: Request, ctx: Context) -> Response {
