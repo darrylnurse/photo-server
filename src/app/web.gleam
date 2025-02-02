@@ -28,6 +28,8 @@ fn cors() {
     |> cors.allow_origin("https://photo-client.onrender.com")
     |> cors.allow_method(http.Get)
     |> cors.allow_method(http.Post)
+    |> cors.allow_method(http.Options)
     |> cors.allow_header("content-type")
+    |> cors.allow_header("authorization")
     |> cors.allow_header("origin")
 }
