@@ -1,5 +1,5 @@
 import gleam/dynamic.{type Dynamic}
-import gleam/http.{Get, Post}
+import gleam/http.{Get, Post, Options}
 import gleam/io
 import gleam/json
 import gleam/option
@@ -85,7 +85,7 @@ pub fn cameras(ctx: Context) {
 
 pub fn all(req: Request, ctx: Context) -> Response {
   case req.method {
-    Get -> list_photos(ctx)
+    Get | Options -> list_photos(ctx)
     Post -> add_photos(req, ctx)
     _ -> wisp.method_not_allowed([Get, Post])
   }
