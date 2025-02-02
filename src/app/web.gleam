@@ -26,6 +26,7 @@ fn cors() {
     |> cors.allow_origin("http://localhost:5173")
     |> cors.allow_origin("http://localhost:5174")
     |> cors.allow_origin("https://photo-client.onrender.com")
+    |> cors.allow_origin("https://omenclate.com")
     |> cors.allow_method(http.Get)
     |> cors.allow_method(http.Post)
     |> cors.allow_method(http.Options)

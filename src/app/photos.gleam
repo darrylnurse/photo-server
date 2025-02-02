@@ -1,12 +1,12 @@
+import app/sql.{all_photos, new_photo, single_photo, unique_cameras}
+import app/web.{type Context}
 import gleam/dynamic.{type Dynamic}
-import gleam/http.{Get, Post, Options}
+import gleam/http.{Get, Options, Post}
 import gleam/io
 import gleam/json
 import gleam/option
 import gleam/string
 import gleam/string_tree
-import app/sql.{all_photos, new_photo, single_photo, unique_cameras}
-import app/web.{type Context}
 import pog
 import wisp.{type Request, type Response}
 
@@ -60,7 +60,7 @@ pub type Photo {
 }
 
 pub fn cameras(ctx: Context) {
-  let assert Ok(pog.Returned(_rows_count, rows)) =  unique_cameras(ctx.db)
+  let assert Ok(pog.Returned(_rows_count, rows)) = unique_cameras(ctx.db)
   let default_camera = "All"
 
   let result = {
@@ -68,12 +68,18 @@ pub fn cameras(ctx: Context) {
       json.to_string_tree(
         json.object([
           #(
-            "cameras", json.array(rows, fn(row) {
-              json.object([#("camera", json.string(option.unwrap(row.camera, default_camera)))])
-            })
-          )
-        ])
-      )
+            "cameras",
+            json.array(rows, fn(row) {
+              json.object([
+                #(
+                  "camera",
+                  json.string(option.unwrap(row.camera, default_camera)),
+                ),
+              ])
+            }),
+          ),
+        ]),
+      ),
     )
   }
 
